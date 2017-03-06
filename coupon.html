@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <title> 肯德基优惠券</title>
+    <link rel="stylesheet" href="css/commen.css"/>
+    <link rel="stylesheet" href="css/coupon.css"/>
+
+</head>
+<body>
+<div class="home-layout">
+
+
+    <div class="top">
+        <a href="index.html">  <img src="images/arrow2.png" alt=""/></a>
+        <h3>优惠券</h3>
+        <img src="images/header_app.png " alt=""/>
+    </div>
+
+    <div class="ticket clearfix">
+
+
+    </div>
+
+ <div class="return">
+     <p><a href="index.html">首页</a> &nbsp;&gt;&nbsp; <a href="#">优惠券</a></p>
+ </div>
+
+    <!--底部 start-->
+    <div class="foot">
+
+        <ul class="clearfix">
+            <li><a href="#">登录</a></li>
+            <li><a href="#">注册</a></li>
+            <li><a href="#top">返回顶部</a></li>
+        </ul>
+
+        <p><span class="mobile">手机APP下载</span> 慢慢买手机版 -- 掌上比价平台</p>
+        <p>m.manmanbuy.com</p>
+    </div>
+    <!--底部 end-->
+</div>
+</body>
+</html>
+
+<script src="lib/jquery/jquery.js"></script>
+<script src="js/template.js"></script>
+<script src="lib/bootstrap/js/bootstrap.js"></script>
+
+<script type="text/html" id="ticket">
+ {{if result}}
+    {{each result as value }}
+         <div class="ticket-box">
+             <div class="ticket-img">
+                 <img src={{value.couponImg}} alt=""/>
+             </div>
+             <p><a href="{{value.couponLink}}?{{value.couponId}}">{{value.couponTitle}}</a></p>
+         </div>
+    {{ /each }}
+ {{/if}}
+</script>
+
+
+<script>
+    $(function(){
+        $.ajax({
+            url:'http://127.0.0.1:3000/api/getcoupon',
+            success:function(data){
+                var html = template('ticket',data)
+                $('.ticket').html(html)
+            }
+        })
+    })
+</script>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>brandTitle 第14页</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="css/commen.css">
+    <link rel="stylesheet" href="css/brandTitle.css">
+</head>
+<body>
+<!--顶部通栏  start-->
+<div class="top_banner" id="top">
+    <a href="index.html"></a>
+    <a href="#"></a>
+</div>
+<!--顶部通栏  end-->
+
+<!--搜索框   start-->
+<div class="search">
+    <input type="text" placeholder="请输入你需要比价的商品"/>
+    <input type="button" value="搜索"/>
+</div>
+<!--搜索框   end-->
+<!--三级菜单栏-->
+<div class="nav clearfix">
+    <h3>
+        <a href='index.html'>首页</a>&nbsp;&gt;&nbsp;
+        <a href='#'>全部分类</a>&nbsp;&gt;&nbsp;
+    </h3>
+</div>
+<!--总标题-->
+<div class="host">
+    <h3>热门品牌排行</h3>
+</div>
+<!--商品分类-->
+<ul class="category"></ul>
+<!--底部栏-->
+<!-- 底部  start-->
+<div class="foot">
+    <ul class="clearfix">
+        <li><a href="#">登录</a></li>
+        <li><a href="#">注册</a></li>
+        <li><a href="#top">返回顶部</a></li>
+    </ul>
+    <p><span class="mobile">手机APP下载</span> 慢慢买手机版 -- 掌上比价平台</p>
+    <p>m.manmanbuy.com</p>
+</div>
+<!--底部 end-->
+</body>
+<script src="lib/jquery/jquery.js"></script>
+<script src="lib/template.js"></script>
+<script type="text/html" id ="category">
+    {{each result as value}}
+    <li><a href="brand.html?{{value.brandTitleId}}"><h3>{{value.brandTitle}} <i class='san'></i></h3></a></li>
+    {{/each}}
+</script>
+<script>
+    $(function () {
+        $.ajax({
+            type : 'get',
+            url : 'http://127.0.0.1:3000/api/getbrandtitle',
+            dataType : 'json',
+            success : function (result) {
+                var html = template( 'category', result );
+                $('.category').html( html );
+            }
+        })
+    })
+
+</script>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <title> 省钱控 </title>
+    <link rel="stylesheet" href="css/commen.css"/>
+    <link rel="stylesheet" href="css/inlanddiscount1.css"/>
+</head>
+<body>
+<div class="home-layout">
+
+    <!-- 顶部 start-->
+
+    <div class="top">
+        <a href="index.html">  <img src="images/arrow2.png" alt=""/></a>
+        <h3>国内折扣</h3>
+        <img src="images/header_app.png " alt=""/>
+    </div>
+    <!-- 顶部 end-->
+
+    <!-- 标题部分 start-->
+
+    <div class="title">
+
+    </div>
+    <!-- 标题部分 end-->
+
+    <!-- 大图  start-->
+
+    <!-- 大图  end-->
+
+    <!-- 地址状态 start-->
+
+    <!-- 地址状态 end-->
+
+    <!-- 前往购买 start-->
+      <div class="go">
+          <a href="#">前往购买</a>
+      </div>
+    <!-- 前往购买 end-->
+
+    <!-- 二维码 start-->
+    <div class="erweima">
+        <img src="images/mmbweixin2.png" alt=""/>
+    </div>
+    <!-- 二维码  end-->
+
+    <!-- 发表评论 start-->
+
+
+    </div>
+    <!-- 发表评论  end-->
+
+    <!-- 最新评论 start-->
+    <div class="new">
+
+    </div>
+    <!-- 最新评论  end-->
+
+
+
+    <!--底部 start-->
+    <div class="foot">
+
+        <ul class="clearfix">
+            <li><a href="#">登录</a></li>
+            <li><a href="#">注册</a></li>
+            <li><a href="#top">返回顶部</a></li>
+        </ul>
+
+        <p><span class="mobile">手机APP下载</span> 慢慢买手机版 -- 掌上比价平台</p>
+        <p>m.manmanbuy.com</p>
+    </div>
+    <!--底部 end-->
+</div>
+</body>
+</html>
+
+<script src="lib/jquery/jquery.js"></script>
+<script src="js/template.js"></script>
+<script src="lib/bootstrap/js/bootstrap.js"></script>
+
+
+
+<script type="text/html" id="good">
+    {{if result}}
+        {{each result as value}}
+            <h2>{{value.productName}}</h2>
+            <p>{{productFrom}}  | {{value.productTime}}| {{value.productTips}}</p>
+
+            <div class="good_des clearfix">
+                 {{#value.productImgSm}}
+                <p>{{value.productInfo}}</p>
+            </div>
+
+            <div class="show">
+                {{#value.productImgLg}}
+            </div>
+
+    <div class="address">
+        {{#value.productCity}}
+    </div>
+        {{/each}}
+    {{/if}}
+</script>
+
+
+<script type="text/html" id="new">
+    {{if result}}
+        {{each result as value}}
+            {{#value.productComment}}
+        {{/each}}
+    {{/if}}
+</script>
+<script>
+    $(function(){
+        var a = location.search;
+        var id_1 = +a.slice(1);
+//        console.log(id_1)
+
+
+        //动态创建
+        $.ajax({
+            url:'http://127.0.0.1:3000/api/getmoneyctrlproduct',
+            data:{productid:id_1},
+            success:function(data){
+                var html = template('good',data)
+                $('.title').html(html)
+            }
+        })
+
+    $.ajax({
+        url:'http://127.0.0.1:3000/api/getmoneyctrlproduct',
+        data:{productid:id_1},
+        success:function(data){
+            var html = template('new',data)
+            $('.new').html(html)
+        }
+    })
+    })
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

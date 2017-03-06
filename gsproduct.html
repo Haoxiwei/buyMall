@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <title> 省钱控 </title>
+    <link rel="stylesheet" href="css/commen.css"/>
+    <link rel="stylesheet" href="css/gsproduct.css"/>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css"/>
+</head>
+<body>
+<div class="home-layout">
+
+    <!-- 顶部 start-->
+
+    <div class="top">
+        <a href="index.html">  <img src="images/arrow2.png" alt=""/></a>
+        <h3>凑单品</h3>
+        <img src="images/header_app.png " alt=""/>
+    </div>
+
+
+    <!-- tab 导航栏 -->
+    <div class="tab">
+        <div class="shop">
+            <ul>
+                <li> <i class="shopName">京东</i> <img src="images/triangle.png" alt=""/></li>
+                <li> <i class="areaName">华南</i> <img src="images/triangle.png" alt=""/></li>
+                <li> <i class="name">全部分类</i> <img src="images/triangle.png" alt=""/></li>
+                <li><span><img src="images/search.png" alt=""/></span></li>
+            </ul>
+        </div>
+       <div class="more">
+           <ul>
+
+           </ul>
+       </div>
+
+    </div>
+
+
+
+    <!-- 商品详细信息 -->
+    <div class="product">
+
+
+    </div>
+
+
+
+
+
+
+
+    <!--底部 start-->
+    <div class="foot">
+
+        <ul class="clearfix">
+            <li><a href="#">登录</a></li>
+            <li><a href="#">注册</a></li>
+            <li><a href="#top">返回顶部</a></li>
+        </ul>
+
+        <p><span class="mobile">手机APP下载</span> 慢慢买手机版 -- 掌上比价平台</p>
+        <p>m.manmanbuy.com</p>
+    </div>
+    <!--底部 end-->
+</div>
+</body>
+</html>
+
+<script src="lib/jquery/jquery.js"></script>
+<script src="js/template.js"></script>
+<script src="lib/bootstrap/js/bootstrap.js"></script>
+
+<script type="text/html" id="shop">
+    {{if result}}
+        {{each result as value}}
+            <li><a href="#">{{value.shopName}}</a></li>
+        {{/each}}
+    {{/if}}
+</script>
+<script type="text/html" id="area">
+    {{if result}}
+    {{each result as value}}
+    <li>{{value.areaName}}</li>
+    {{/each}}
+    {{/if}}
+</script>
+
+
+<script type="text/html" id="product">
+{{if result}}
+    {{each result as value}}
+            <div class="good">
+                <div class="good-img"><img src={{value.productImg}} alt=""/></div>
+                <div class="good-des clearfix">
+                    <p>{{value.productName}}</p>
+                    <span class="fl">{{value.productPrice}}</span> <button class="fr coudan">去凑单</button>
+                </div>
+        </div>
+    {{/each}}
+{{/if}}
+</script>
+<script>
+    $(function(){
+
+        var shopid= 0;
+        var areaid= 0;
+
+        $('.shop ul>li').each(function(i,v){
+            $(v).on('click',function(){
+               if(i==0){
+                   $.ajax({
+                        url:'http://127.0.0.1:3000/api/getgsshop',
+                        data:{},
+                        success:function(data){
+                           var html  = template('shop' ,data);
+                            $('.more>ul').html(html)
+                            $('.more').toggleClass('show');
+
+                        $('.more ul>li').on('click',function(){
+                            var shopid = $(this).index();
+                            var shopName = data.result[shopid].shopName;
+                            $('.shopName').text(shopName);
+                            $.ajax({
+                                url:'http://127.0.0.1:3000/api/getgsproduct',
+                                data:{areaid:areaid,shopid:shopid},
+                                success:function(data){
+                                    var html = template('product',data);
+                                    $('.product').html(html)
+                                }
+                            })
+
+                        })
+
+
+                       }
+                   })
+               }
+               else if(i==1){
+                   $.ajax({
+                       url:'http://127.0.0.1:3000/api/getgsshoparea',
+                       data:{},
+                       success:function(data){
+                           var html  = template('area' ,data);
+                           $('.more>ul').html(html)
+                           $('.more').toggleClass('show');
+
+                           $('.more ul>li').on('click',function(){
+                               var areaid = $(this).index();
+                               var areaName = data.result[areaid].areaName;
+                               $('.areaName').text(areaName);
+                               $.ajax({
+                                   url:'http://127.0.0.1:3000/api/getgsproduct',
+                                   data:{areaid:areaid,shopid:shopid},
+                                   success:function(data){
+                                       var html = template('product',data);
+                                       $('.product').html(html)
+                                   }
+                               })
+
+                           })
+
+
+
+                       }
+                   })
+               }
+
+            })
+        })
+
+
+
+    })
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

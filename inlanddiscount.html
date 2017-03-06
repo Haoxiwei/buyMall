@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <title> 国内折扣 </title>
+    <link rel="stylesheet" href="css/commen.css"/>
+    <link rel="stylesheet" href="css/inlanddiscount.css"/>
+</head>
+<body>
+<div class="home-layout">
+
+    <!-- 顶部 start-->
+
+    <div class="top">
+        <a href="index.html">  <img src="images/arrow2.png" alt=""/></a>
+        <h3>国内折扣</h3>
+        <img src="images/header_app.png " alt=""/>
+    </div>
+    <!-- 顶部 end-->
+
+    <!-- 商品详情 start-->
+    <!--瀑布流加载-->
+    <div class="in_list clearfix">
+        <ul></ul>
+    </div>
+    <!-- 商品详情 end-->
+
+    <!--底部 start-->
+    <div class="foot">
+
+        <ul class="clearfix">
+            <li><a href="#">登录</a></li>
+            <li><a href="#">注册</a></li>
+            <li><a href="#top">返回顶部</a></li>
+        </ul>
+
+        <p><span class="mobile">手机APP下载</span> 慢慢买手机版 -- 掌上比价平台</p>
+        <p>m.manmanbuy.com</p>
+    </div>
+    <!--底部 end-->
+</div>
+</body>
+</html>
+
+<script src="lib/jquery/jquery.js"></script>
+<script src="js/template.js"></script>
+<script src="lib/bootstrap/js/bootstrap.js"></script>
+
+
+<script type="text/html" id="product">
+        {{if result}}
+        {{each result as value}}
+        <li>
+            <a href="inlanddiscountProduct.html?{{value.productId}}">
+                <i>{{#value.productImg}}</i>
+                <h3>{{value.productName}}</h3>
+                <p class='price'>{{value.productPrice}}</p>
+                <p>{{value.productFrom}}|{{value.productTime}}</p>
+            </a>
+        </li>
+        {{/each}}
+        {{/if}}
+
+</script>
+
+<script>
+    $(function() {
+        //声明一个对象 inter 来接收传回来的json值，当作内存使用
+        var internal = {
+            result:[]
+        }
+
+        $.ajax({
+            url: 'http://127.0.0.1:3000/api/getinlanddiscount',
+            success: function (data) {
+                for( var i = 0; i < 4; i++) {
+                    internal.result.push(data.result[i]);
+                    var html = template('product', internal)
+                    $('.in_list>ul').html(html);
+                }
+
+                //获取页面上可视高度
+                var clientH = document.documentElement.clientHeight; //可视高度
+
+                window.addEventListener('scroll',function(){
+                    var scrollTop = document.documentElement.scrollTop || document.body.scrollTop || window.pageYOffset;
+                    if( ( (clientH + scrollTop ) == $( document).height() ) && (internal.result.length < data.result.length)) {
+
+                        for( var i = 0;  i < 4; i++) {
+                            internal.result.push(data.result[ internal.result.length ]);
+                        }
+                        var html = template('product', internal);
+                        $('.in_list>ul').html(html);
+                    }
+                })
+
+            }
+        })
+
+    })
+</script>
+
+
+
+
+
+
+
+

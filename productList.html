@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <title>商品列表页</title>
+    <link rel="stylesheet" href="css/commen.css"/>
+    <link rel="stylesheet" href="css/productpage.css"/>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css"/>
+</head>
+<body>
+<div class="home_layout">
+    <!--顶部通栏  start-->
+    <div class="top_banner" id="top">
+        <a href="index.html"></a>
+        <a href="#"></a>
+    </div>
+    <!--顶部通栏  end-->
+
+    <!--搜索框   start-->
+    <div class="search">
+        <input type="text" placeholder="请输入你需要比价的商品"/>
+        <input type="button" value="搜索"/>
+    </div>
+    <!--搜索框   end-->
+
+    <!-- 三级菜单  start-->
+    <div class="classify clearfix" id="menu"></div>
+    <!-- 三级菜单  end-->
+
+    <!-- 商品详情  start-->
+    <div class="product_list clearfix"></div>
+    <!-- 商品详情  end-->
+
+    <!-- 分页  start-->
+    <div class="select clearfix">
+        <button id="syy">上一页</button>
+        <select id="xl"></select>
+        <button id="xyy">下一页</button>
+    </div>
+    <!-- 分页  end-->
+
+    <!-- 底部  start-->
+    <div class="foot">
+        <ul class="clearfix">
+            <li><a href="#">登录</a></li>
+            <li><a href="#">注册</a></li>
+            <li><a href="#top">返回顶部</a></li>
+        </ul>
+        <p><span class="mobile">手机APP下载</span> 慢慢买手机版 -- 掌上比价平台</p>
+
+        <p>m.manmanbuy.com</p>
+    </div>
+    <!--底部 end-->
+</div>
+</body>
+<!--引包-->
+<script src="lib/jquery/jquery.js"></script>
+<script src="js/template.js"></script>
+<script src="lib/bootstrap/js/bootstrap.js"></script>
+
+
+<!--商品详情模板 -->
+<script type="text/html" id="one">
+    {{if result}}
+    {{each result as value}}
+    <div class="good clearfix">
+        <a href="#">
+            {{#value.productImg}}
+        </a>
+
+        <div class="good_des">
+            <!-- 这里的             a标签的地址也是动态获取的，根据ajax后台请求的数据去找到相应页面的数据，跟下面ajax 动态获取参数保持一致
+                  这里的            a 标签指向决定了下一页的三级菜单显示的时候表示在链接-->
+            <p !important><a href="productdetails.html?{{value.productId}}">{{value.productName}}</a></p>
+
+            <p class="price">{{value.productPrice}}</p>
+
+            <p><a href="#">{{value.productQuote}}</a> <a href="#">{{value.productCom}}</a></p>
+        </div>
+    </div>
+    {{/each}}
+    {{/if}}
+</script>
+
+
+<!--三级菜单模板-->
+<script type="text/html" id="skip">
+    {{if result}}
+    {{each result as value}}
+    <p><a href="#">首页</a> <span> &gt;</span>
+        <a href="./category.html">全部分类</a> <span> &gt;</span>
+        <a href="#">{{value.category}}</a> <span> &gt;</span>
+    </p>
+    <button class="filter">筛选</button>
+    {{/each}}
+    {{/if}}
+</script>
+<script>
+
+
+    $(function () {
+        //动态生成页面
+        //这里通过location.search获取到的是url地址中最后加上?.....（应该传入的参数），然后进行相关的页面数据获取
+        var a = location.search;
+        //获取到传入的url地址后面的参数，在这里进行一下处理，把？去掉，只留下需要的参数
+        var id_1 = +a.slice(1);
+
+
+        //三级菜单模块   通过ajax 请求，动态获取菜单名
+        $.ajax({
+            //这里是获取参数的url 地址
+            url: 'http://127.0.0.1:3000/api/getcategorybyid',
+            //！！！！！这里是url 后面跟？后面传入的参数，因为三级菜单是动态的，没次点击的 标签都不一样，所以在这里根据点击是传入的id名判断
+            //到底是哪一个需要的页面  ，根据详细的参数和地址，获取到相应的元素进行渲染
+            data: {categoryid: id_1},
+            success: function (data) {
+                //通过回调函数对相应的数据和模块进行渲染
+                var html = template('skip', data)
+                $('#menu').html(html)
+            }
+        })
+
+
+        //商品详情模板
+        $.ajax({
+            //这里大部分参数和上面的数据保持一致，因为通过上面的参数获取到指定类型的商品
+            //然后通过指定类型的商品的参数去获取到该商品类型的详细信息
+            url: 'http://127.0.0.1:3000/api/getproductlist',
+            //这里的参数和上面的三级菜单保持一致
+            data: {categoryid: id_1},
+            success: function (data) {
+                //这个时候，上下数据获取保持一致，这个时候相应的商品对应相应的商品详细信息，确定一样，而后渲染到页面上
+                var html = template('one', data)
+                $('.product_list').html(html)
+
+
+                //这里声明变量是动态获取该返回数据中有多少信息，然后动态生成下拉的菜单里面的参数
+                //第一个参数  表示的是一页有多少元素
+                var pagesize = data.pagesize;
+                //第二个参数  表示有多少元素
+                var totalCount = data.totalCount;
+                // 用总元素  去  / 一页多少元素   =  总共的页数
+                var list = Math.ceil(totalCount / pagesize);
+                //这里的 o 用来进行字符串拼接
+                var o = '';
+                //进行for 循环， 通过总页数来创建多少个option 标签
+                for (var i = 1; i <= list; i++) {
+                    o += '<option value=' + i + '>' + i + '/' + list + '</option>';
+
+                }
+                //把动态创建出来的option标签添加到select 标签里面去
+                $('#xl').html(o);
+
+
+                //下一页
+                //这里声明一个变量参数，默认为1
+                var pageid = 1;
+                //给页面上的下一页的 按钮绑定点击事件
+                $('#xyy').on('click', function () {
+                    //首先进行判断，如果默认的页数   小于 上面的ajax 参数传回来，然后经过我们计算的总页数
+                    if (pageid < list) {
+                        //让pageid 进行 自增操作
+                        pageid++;
+                        //这里表示的是下拉菜单的当前项被选中，跟着页面的跳转，让下拉菜单进行动态的变化
+                        $('#xl option')[pageid - 1].selected = true;
+                        //如果上面的判断成立，进行ajax 的请求
+                        $.ajax({
+                            url: 'http://127.0.0.1:3000/api/getproductlist',
+                            //这里传入的参数： 第一个参数表示当前商品的名称所对应的页面
+                            //               第二个参数表示传递当前商品的页数，是动态改变的
+                            data: {categoryid: id_1, pageid: pageid},
+                            success: function (data) {
+                                //请求成功以后，把新的数据重新渲染到页面上
+                                var html = template('one', data)
+                                $('.product_list').html(html)
+                            }
+                        })
+                    }
+
+                })
+
+
+                //上一页
+                //如下一页的操作类似，只不过上面的是让页数 ++ ，这里让页数 --；实现效果和方法相同
+                $('#syy').on('click', function () {
+                    if (pageid > 1) {
+                        pageid--;
+                        $('#xl option')[pageid - 1].selected = true
+                        $.ajax({
+                            url: 'http://127.0.0.1:3000/api/getproductlist',
+                            data: {categoryid: id_1, pageid: pageid},
+                            success: function (data) {
+                                var html = template('one', data)
+                                $('.product_list').html(html)
+                            }
+                        })
+                    }
+                })
+
+
+                // 下拉选页面
+                //首先判断当前的 下拉菜单是否发生变化，这个在因为onchange 是js 方法，不是jquery的方法
+                //所以需要加一个【0】，把前面的参数变成普通的dom 元素，然后进行操作
+                $('#xl')[0].onchange = function () {
+                    //声明一个变量记录当前的下拉菜单的 value 里面的值
+                    var id = $('#xl option:selected').val() - 0
+                    //当下拉菜单发生改变的时候进行ajax 请求
+                    $.ajax({
+                        url: 'http://127.0.0.1:3000/api/getproductlist',
+                        //这里的参数也是和上面的保持一致，只不过当前的id 值不是上面的id值
+                        //是通过上面的 下拉菜单的value值发生变化的值来进行页面的跳转
+                        data: {categoryid: id_1, pageid: id},
+                        success: function (data) {
+                            //请求数据成功以后进行对页面的渲染
+                            var html = template('one', data)
+                            $('.product_list').html(html)
+                            //最后让当前的id 等于上面的pageid  ，记录现在所在的页数
+                            pageid = id
+                        }
+                    })
+
+                }
+
+            }
+        })
+
+    })
+</script>
+</html>

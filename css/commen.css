@@ -1,0 +1,307 @@
+@media only screen and (max-width: 1080px), only screen and (max-device-width:1080px) {
+    html,body {
+        font-size:33.75px;
+    }
+}
+@media only screen and (max-width: 960px), only screen and (max-device-width:960px) {
+    html,body {
+        font-size:30px;
+    }
+}
+@media only screen and (max-width: 800px), only screen and (max-device-width:800px) {
+    html,body {
+        font-size:25px;
+    }
+}
+@media only screen and (max-width: 720px), only screen and (max-device-width:720px) {
+    html,body {
+        font-size:22.5px;
+    }
+}
+@media only screen and (max-width: 640px), only screen and (max-device-width:640px) {
+    html,body {
+        font-size:20px;
+    }
+}
+@media only screen and (max-width: 600px), only screen and (max-device-width:600px) {
+    html,body {
+        font-size:18.75px;
+    }
+}
+@media only screen and (max-width: 540px), only screen and (max-device-width:540px) {
+    html,body {
+        font-size:16.875px;
+    }
+}
+@media only screen and (max-width: 480px), only screen and (max-device-width:480px) {
+    html,body {
+        font-size:15px;
+    }
+}
+@media only screen and (max-width: 414px), only screen and (max-device-width:414px) {
+    html,body {
+        font-size:12.9375px;
+    }
+}
+@media only screen and (max-width: 400px), only screen and (max-device-width:400px) {
+    html,body {
+        font-size:12.5px;
+    }
+}
+@media only screen and (max-width: 375px), only screen and (max-device-width:375px) {
+    html,body {
+        font-size:11.71875px;
+    }
+}
+@media only screen and (max-width: 360px), only screen and (max-device-width:360px) {
+    html,body {
+        font-size:11.25px;
+    }
+}
+@media only screen and (max-width: 320px), only screen and (max-device-width:320px) {
+    html,body {
+        font-size:10px;
+    }
+}
+@media only screen and (max-width: 240px), only screen and (max-device-width:240px) {
+    html,body {
+        font-size:7.5px;
+    }
+}
+/*css 初始化 */
+html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, fieldset, legend, img {
+    margin: 0;
+    padding: 0;
+}
+html,body{
+    width: 100%;
+}
+.home-layout{
+    max-width: 40rem;
+    min-width: 15rem;
+    margin: 0 auto;
+    position: relative;
+}
+/*各浏览器显示不同，去掉蓝色边框*/
+fieldset, img, input, button {
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline-style: none;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+input {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-family: "SimSun", "宋体";
+}
+
+/*去掉行内替换元素空白缝隙*/
+select, input {
+    vertical-align: middle;
+}
+
+/*去掉行内替换元素空白缝隙*/
+img {
+    border: 0;
+    vertical-align: middle;
+}
+
+select, input, textarea {
+    font-size: 0.6rem;
+    margin: 0;
+}
+
+/*防止拖动 影响布局*/
+textarea {
+    resize: none;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+body {
+    font: 12px/150% Arial, Verdana, "\5b8b\4f53"; /*宋体 unicode */
+    color: #666;
+    background: #fff;
+}
+
+/*清除浮动*/
+.clearfix:before, .clearfix:after {
+    content: "";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1; /*IE/7/6*/
+}
+
+a {
+    font-size: 0.7rem;
+    vertical-align: baseline;
+    background: transparent;
+    text-decoration: none;
+    font-family: "Microsoft Yahei", "\\5B8B体", Tahoma, sans-serif;;
+    color: #000000  ;
+    font-weight: 400;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+/*h1, h2, h3, h4, h5, h6 {*/
+    /*text-decoration: none;*/
+    /*/!*font-weight: normal;*!/*/
+    /*font-size: 100%;*/
+/*}*/
+
+s, i, em {
+    font-style: normal;
+    text-decoration: none;
+}
+
+/*公共类*/
+.w {
+    /*版心 提取 */
+    width: 60.5rem;
+    margin: 0 auto;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.al {
+    text-align: left;
+}
+
+.ac {
+    text-align: center;
+}
+
+.ar {
+    text-align: right;
+}
+
+.hide {
+    display: none;
+}
+.mt{
+    margin-top: 20px;
+}
+.mb{
+    margin-bottom: 20px;
+}
+
+
+/*公共的顶部样式*/
+/*顶部通栏  start*/
+.top_banner{
+    /*width: 15rem;*/
+    height: 2.5rem;
+    background-color: #FF841D;
+    box-sizing: border-box;
+    padding: 0.5rem;
+}
+.top_banner a:nth-child(1){
+    display: block;
+    width: 9.25rem;
+    height: 1.25rem;
+    background: url("../images/header_logo.png");
+    background-size: cover;
+    float: left;
+}
+.top_banner a:nth-child(2){
+    display: block;
+    width: 1.7rem;
+    height: 1.7rem;
+    background: url("../images/header_app.png");
+    background-size: cover;
+    float: right;
+}
+/*顶部通栏  end*/
+/*搜索框   start*/
+
+.search {
+    height: 4rem;
+    background-color: #fff;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0.75rem;
+    padding-top: 1.25rem;
+    border-bottom: 10px solid #f1f1f1;
+}
+
+.search input:nth-child(1){
+    background-color: #f1f1f1;
+    width:80%;
+    height: 1.5rem;
+    border-radius:30px;
+    margin-right: 0.25rem;
+    font-size: 0.7rem;
+    box-sizing: border-box;
+    padding-left: 1rem;
+}
+.search input:nth-child(2){
+    width:17%;
+    height: 1.5rem;
+    border-radius:20px;
+    font-size: 0.7rem;
+    background-color: #FF841D;
+}
+/*搜索框   end*/
+
+
+/*底部  start*/
+
+.foot{
+    /*height: 15re  m;*/
+    width: 100%;
+    background-color: #f1f1f1;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+.foot ul {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+.foot ul li {
+    float: left;
+    width: 30.9%;
+    height: 1.5rem;
+    border: 1px solid #000;
+    padding-left: 0.4rem;
+    text-align: center;
+    line-height: 1.5rem;
+
+}
+.foot ul li:nth-child(1){
+    border-left: none;
+}
+.foot ul li a{
+    font-size: 0.7rem;
+    color: #000;
+}
+.foot ul li:nth-child(1) {
+    border-left: none;
+
+}
+.foot p .mobile{
+    color: #FF841D;
+}
+/*底部  end*/

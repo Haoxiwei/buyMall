@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <title> 肯德基优惠券 </title>
+    <link rel="stylesheet" href="css/commen.css"/>
+    <link rel="stylesheet" href="css/couponproduct.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+
+</head>
+<body>
+<div class="home-layout">
+    <!-- 弹窗-->
+    <div class="shade">
+        <div class="left-arrow">&lt;</div>
+        <div class="right-arrow">&gt;</div>
+        <div class="banner">
+            <ul class="banner-box clearfix"></ul>
+
+        </div>
+    </div>
+
+    <div class="top">
+        <a href="coupon.html    ">  <img src="images/arrow2.png" alt=""/></a>
+        <h3 class="tit"></h3>
+        <img src="images/header_app.png " alt=""/>
+
+        <p> --点餐前出示手机中的优惠券，即可享受优惠--</p>
+    </div>
+
+
+ <div class="product_box">
+
+ </div>
+
+
+    <!--底部 start-->
+    <div class="foot">
+
+        <ul class="clearfix">
+            <li><a href="#">登录</a></li>
+            <li><a href="#">注册</a></li>
+            <li><a href="#top">返回顶部</a></li>
+        </ul>
+
+        <p><span class="mobile">手机APP下载</span> 慢慢买手机版 -- 掌上比价平台</p>
+        <p>m.manmanbuy.com</p>
+    </div>
+    <!--底部 end-->
+</div>
+</body>
+</html>
+
+<script src="lib/jquery/jquery.js"></script>
+<script src="js/template.js"></script>
+<script src="lib/bootstrap/js/bootstrap.js"></script>
+
+<script type="text/html" id="product">
+
+{{if result}}
+    {{each result as value}}
+        <div class="product">
+            <div class="product_img">
+               {{#value.couponProductImg}}
+            </div>
+            <div class="product_des">
+                <p>{{value.couponProductName}}</p>
+                <p>{{value.couponProductPrice}}</p>
+                <p>{{value.couponProductTime}}</p>
+            </div>
+</div>
+    {{/each}}
+{{/if}}
+</script>
+
+<script type="text/html" id="banner">
+    {{if result}}
+        {{each result as value}}
+            <li>{{#value.couponProductImg}}</li>
+        {{/each}}
+    {{/if}}
+</script>
+
+
+
+<script>
+    $(function() {
+        var a = location.search;
+        var id = a.slice(1) - 0;
+        var flag = true
+        $.ajax({
+            url: 'http://127.0.0.1:3000/api/getcouponproduct',
+            data: {couponid: id},
+            success: function (data) {
+//                console.log(data.result[0].couponId);
+                if(id == 0){
+                    $('.tit').html('肯德基优惠券')
+                }
+                else if(id == 1){
+                    $('.tit').html('必胜客优惠券')
+                }
+                else if(id == 2){
+                    $('.tit').html('棒约翰优惠券')
+                }
+                else if(id == 3){
+                    $('.tit').html('哈根达斯优惠券')
+                }
+                var html = template('product', data)
+                $('.product_box').html(html)
+
+                $('.product').on('click',function() {
+                    flag = false
+                    $('.shade').show();
+                        var html = template('banner', data)
+                        $('.banner-box').html(html)
+
+                        var imgWidth = $('.banner')[0].offsetWidth;
+                        var left = document.querySelector('.left-arrow');
+                        var right = document.querySelector('.right-arrow');
+                        var lis = document.querySelectorAll('.banner-box>li');
+                        var ul = document.querySelector('.banner-box');
+
+                    function stopBubble(e) {
+                        if(e && e.stopPropagation){
+                            e.stopPropagation();
+                        }else{
+                            window.event.cancelBubble = true;
+                        }
+                    }
+                        var pic = 0;
+                        pic = $(this).index()
+                        $(ul).css({
+                            transform:'translateX('+ -pic*imgWidth+'px' +')'
+                        })
+
+
+                        right.addEventListener('click', function () {
+                            stopBubble(this)
+                            if (pic === lis.length - 1) {
+                               pic = 0
+                            }
+                            pic++;
+                            var target = -pic * imgWidth+'px';
+                            $(ul).css({
+                                transition:'all 1s',
+                                transform:'translateX('+target+')'
+                            })
+
+                        })
+                        left.addEventListener('click',function(){
+                            stopBubble(this)
+                            if(pic === 0){
+                                return ;
+                            }
+                            pic--;
+                            var target = -pic * imgWidth + 'px';//图片下标*图片的宽度就是要移动的距离
+                            $(ul).css({
+                                transition:'all 1s',
+                                transform:'translateX('+target+')'
+                            })
+                        })
+                    })
+
+                    $('.shade').on('click',function(){
+                        if(flag == false){
+                            $('.shade').hide();
+                        }
+                    })
+
+
+            }
+        })
+    })
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

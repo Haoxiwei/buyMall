@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <title> 首页 </title>
+    <link rel="stylesheet" href="css/commen.css"/>
+    <link rel="stylesheet" href="css/homepage.css"/>
+</head>
+<body>
+
+<div class="home-layout">
+    <!--顶部通栏  start-->
+    <div class="top_banner" id="top">
+        <a href="index.html"></a>
+        <a href="#"></a>
+    </div>
+    <!--顶部通栏  end-->
+    <!--搜索框   start-->
+    <div class="search">
+        <input type="text" placeholder="请输入你需要比价的商品"/>
+        <input type="button" value="搜索"/>
+    </div>
+    <!--搜索框   end-->
+    <!--首页菜单  start-->
+    <div class="menu clearfix"></div>
+    <!--首页菜单  end-->
+    <!--商品列表 start-->
+    <div class="details">
+        <div class="details_top">
+            <a href="#">
+                <span>超值折扣推荐</span>
+                <img src="images/more.png" alt=""/>
+            </a>
+        </div>
+        <div class="details_list clearfix"></div>
+        <div class="goods_more">
+            <a href="#">更多优惠信息&gt;&gt;</a>
+        </div>
+    </div>
+    <!--商品列表 end-->
+
+    <!--底部 start-->
+    <div class="foot">
+        <div class="details_top">
+            <a href="#"><span class="fl">品牌排行</span>
+                <img src="images/more.png" alt=""/>
+            </a>
+        </div>
+        <ul class="clearfix">
+            <li><a href="#">登录</a></li>
+            <li><a href="#">注册</a></li>
+            <li><a href="#top">返回顶部</a></li>
+        </ul>
+        <p><span class="mobile">手机APP下载</span> 慢慢买手机版 -- 掌上比价平台</p>
+        <p>m.manmanbuy.com</p>
+    </div>
+    <!--底部 end-->
+</div>
+
+<!--引包-->
+<script src="js/base.js"></script>
+<script src="lib/jquery/jquery.js"></script>
+<script src="js/template.js"></script>
+
+<!--商品详情的模板 -->
+<script type="text/html" id="one">
+    {{if result}}
+    {{each result as value}}
+    <div class="details_goods clearfix">
+        <a href="#" class="goods_img">
+            {{#value.productImgSm}}
+        </a>
+
+        <div class="goods_des">
+            <a href="#">
+                {{value.productName}}
+                <span>{{value.productPinkage}}</span>
+            </a>
+
+            <p>{{value.productFrom}}|{{value.productTime}} <span><img src="images/new.png" alt=""/><i>{{value.productComCount}}</i></span>
+            </p>
+        </div>
+    </div>
+
+    {{/each}}
+    {{/if}}
+
+</script>
+<script>
+    $(function () {
+        //ajax 动态生成页面
+        //通过ajax 请求获取到后台的数据，这个方法是通过字符串拼接的方法把数据拼接到页面上
+
+        //1.通过数据动态创建  导航栏 tab ；
+        $.ajax({
+            //调用 jQuery 自带的ajax方法 ，并且传入相应需要的参数
+            url: 'http://127.0.0.1:3000/api/getindexmenu',
+            //获取到参数以后使用回掉函数
+            success: function (data) {
+                //这里的data 获取的是通过ajax 动态获取到的json数据，也就是我们需要的参数
+                //声明变量接收回调函数返回的结果，data.reuslt是一个 json 类型的数据
+                var obj = data.result;
+                //因为是拼接字符串，所以先创建一个标签接收值
+                var tag = '<ul class="ul clearfix">';
+                //循环遍历回掉函数data.result的值
+                $.each(obj, function (i, e) {
+                    //对传入的参数进行拼接，需要的值进行添加
+                    tag += '<li id="lis' + i + '"><a href="' + e.titlehref + '">' + e.img + '<p>' + e.name + '</p></a>'
+                    //最后把拼接好的字符串添加到页面上
+                    $('.menu').html(tag)
+
+                    //首页上的9个li标签，按照要求先显示6个，点击更多在显示下面3个
+                    //循环遍历 ul里面的li
+                    $('.ul li').each(function (i, e) {
+                        //如果 i 的值大于7，也就是超过了6个，就让li元素隐藏
+                        if (i > 7) {
+                            $(e).addClass('hide');
+                        }
+                    })
+                    // 给页面上的 第6个li 绑定点击事件，也就是更多按钮
+                    $('.ul li:nth-child(8)').on('click', function () {
+                        //循环遍历li元素，如果i 大于 7 ，切换类名
+                        $('.ul li').each(function (i, e) {
+                            if (i > 7) {
+                                $(e).toggleClass('hide');
+                            }
+                        })
+                    })
+                })
+            }
+        })
+
+        //2.根据ajax 数据 动态创建商品详情板块
+        //这里是通过模板的方法，在上面创建一个模板，然后在下面通过url地址去获取到相应的参数去动态渲染页面
+        $.ajax({
+            url: 'http://127.0.0.1:3000/api/getmoneyctrl',
+            success: function (data) {
+                var html = template('one', data);
+                //渲染完成以后把渲染好的模板添加到html页面当中去
+                $('.details_list').html(html);
+            }
+        })
+    })
+
+</script>
+</body>
+</html>

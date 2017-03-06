@@ -1,0 +1,126 @@
+.top{
+    height: 40px;
+    background-color: #FF841D;
+    line-height: 40px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.top img:nth-child(1){
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 6px;
+    left: 15px;
+}
+.top img:nth-child(3){
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 6px;
+    right: 15px;
+}
+
+.details_goods{
+    padding-bottom: 0.75rem;
+    padding-top: 0.5rem;
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 30px;
+}
+.details_goods .goods_img{
+    float: left;
+    width: 4rem;
+    height: 4rem;
+}
+.details_goods .goods_img img {
+    width: 100%;
+    height: 100%;
+}
+.details_goods .goods_des{
+    overflow: hidden;
+    padding: 0 0.5rem;
+
+}
+.goods_des a{
+    color: #000;
+    font-size: 0.7rem;
+}
+.goods_des a > span{
+    color: #FF841D;
+}
+.goods_des p {
+    margin-top: 0.75rem;
+    color: #adb3ba;
+}
+.goods_des p span{
+    position: relative;
+    float: right;
+    /*box-sizing: border-box;*/
+    /*padding-right: 0.25rem;*/
+    margin-right: 2rem;
+    width: 1.5rem;
+    height:1.5rem;
+    text-align: center;
+    line-height: 0.25rem;
+    /*border: 1px solid #adb3ba;*/
+}
+.goods_des p span img{
+    width: 100%;
+    height: 100%;
+}
+.goods_des p i {
+    position: absolute;
+    top: 0.75rem;
+    right: -2.5rem;
+    font-size: 0.5rem;
+}
+.details .goods_more{
+    /*padding: 0.5rem;*/
+    margin-left: 0.5rem;
+    margin-top: 0.5rem;
+    width: 95%;
+    height: 1.5rem;
+    /*margin-top: 0.5rem;*/
+    text-align: center;
+    line-height: 1.5rem;
+    background-color: #f1f1f1;
+    border-radius: 5px ;
+}
+
+.goods_more a{
+    color: #000;
+}
+
+
+
+.select{
+    position: relative;
+    margin-bottom: 20px;
+}
+.select button:nth-child(1){
+    float: left;
+    margin-left: 20px;
+    width: 60px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+.select button:nth-child(3){
+    float: right;
+    margin-right: 20px;
+    width: 60px;
+    height: 30px;
+    border-radius: 5px;
+}
+.select select{
+    font-size: 20px;
+    /*margin-left: 50px;*/
+    position: absolute;
+    top: 0;
+    left: 45%;
+    width: 60px;
+
+
+    height: 30px;
+    border-radius: 5px;
+    /*margin: 0 auto;*/
+}

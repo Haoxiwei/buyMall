@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <title>商品详情</title>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="css/commen.css"/>
+    <link rel="stylesheet" href="css/productdetails.css"/>
+</head>
+<body>
+<div>
+    <div class="home_layout">
+        <!--顶部通栏  start-->
+        <div class="top_banner" id="top">
+            <a href="#"></a>
+            <a href="#"></a>
+        </div>
+        <!--顶部通栏  end-->
+
+        <!--搜索框   start-->
+        <div class="search">
+            <input type="text" placeholder="请输入你需要比价的商品"/>
+            <input type="button" value="搜索"/>
+        </div>
+        <!--搜索框   end-->
+
+        <!-- 三级菜单 start-->
+         <div class="menu"></div>
+        <!-- 三级菜单 end-->
+
+        <!-- 标题和图片 start-->
+        <div class="main"></div>
+        <!-- 标题和图片 end-->
+
+        <!-- 参数 start-->
+        <div class="data">
+            <ul>
+                <li>比价购买</li>
+                <li>商品参数</li>
+                <li>评价(2322)</li>
+            </ul>
+        </div>
+        <!-- 参数  end-->
+
+        <!-- 比价购买  start-->
+        <div class="table"></div>
+        <!-- 比价购买  end-->
+
+        <!-- 提示  start-->
+        <div class="notice">
+            *实际价格以各网站列出的实时售价为准，我们提供的价格可能有数小时至数日的延迟。
+        </div>
+        <!-- 提示  end -->
+
+        <!-- 评价 start-->
+        <div class="evaluate">
+            <div class="title">
+                网友评价
+            </div>
+            <div class="details clearfix"></div>
+        </div>
+        <!-- 评价 end-->
+
+        <!-- 更多详情 start-->
+            <div class="more">
+                <button>查看更多评论</button>
+            </div>
+        <!-- 更多详情 end-->
+
+        <!-- 底部   start-->
+        <div class="foot">
+            <ul class="clearfix">
+                <li><a href="#">登录</a></li>
+                <li><a href="#">注册</a></li>
+                <li><a href="#top">返回顶部</a></li>
+            </ul>
+            <p><span class="mobile">手机APP下载</span> 慢慢买手机版 -- 掌上比价平台</p>
+            <p>m.manmanbuy.com</p>
+        </div>
+        <!--底部 end--
+<!--</div>-->
+
+    <script src="lib/jquery/jquery.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/template.js"></script>
+
+
+    <!-- 三级菜单模板-->
+    <script type="text/html" id="skip">
+
+        {{if result}}
+        {{each result as value i}}
+        <p><a href="category.html">全部分类</a> <span> &gt;</span>
+            <a href="productList.html?{{value.categoryId}}">{{value.category}}</a><span> &gt;</span>
+        </p>
+        <button class="filter">筛选</button>
+        {{/each}}
+    {{/if}}
+    </script>
+
+    <script type="text/html" id="skip2">
+
+        {{if result}}
+        {{each result as value i}}
+            <a href='#' class="p">{{value.productName.split(' ')[0]}}</a> <span> &gt;</span>
+        {{/each}}
+        {{/if}}
+    </script>
+
+
+
+    <!-- 商品详情模板-->
+    <script type="text/html" id="details">
+        {{if result}}
+            {{each result as value}}
+                    <h3>{{value.productName}}</h3>
+                    <div class="img">
+                        {{#value.productImg}}
+                    </div>
+                    <span class="collect">收藏</span>
+            {{/each}}
+        {{/if}}
+    </script>
+
+
+    <!-- 比价购买模板-->
+    <script type="text/html" id="buy">
+            {{if result}}
+                {{each result as value}}
+                    {{#value.bjShop}}
+                {{/each}}
+            {{/if}}
+    </script>
+
+
+    <!-- 评论模块-->
+    <script type="text/html" id="evaluate">
+       {{if result}}
+            {{each result as value }}
+                   <div class="eval_details">
+                       <div class="eval_details_top clearfix">
+                           <span>{{value.comName}}</span>
+                           <div>
+                               <p>{{value.comTime}}</p>
+                               <p>{{value.comFrom}}</p>
+                           </div>
+                       </div>
+                       <div class="eval_details_bottom">
+                           {{value.comContent}}
+                       </div>
+                   </div>
+
+            {{/each}}
+       {{/if}}
+    </script>
+
+
+
+
+
+
+
+    <script>
+       $(function(){
+           var a = location.search;
+           var id_1 = +a.slice(1);
+
+            //三级菜单
+           $.ajax({
+               url: 'http://127.0.0.1:3000/api/getproduct',
+               data: {productid:id_1},
+               success: function (data) {
+                   var html = template('skip2',data);
+                   $('.menu').html(html);
+
+                   var categoryid = data.result[0].categoryId;
+                   $.ajax({
+                       url:'http://127.0.0.1:3000/api/getcategorybyid',
+                       data:{categoryid:categoryid},
+                       success:function(data){
+                           var html = template('skip',data);
+                           $('.p').before(html);
+                       }
+                   })
+
+               }
+
+           })
+
+
+           //商品详情
+           $.ajax({
+               url: 'http://127.0.0.1:3000/api/getproduct',
+               data: {productid:id_1},
+               success: function (data) {
+                   console.log(data);
+                   data.name = (data.result[0].productName).split(' ')[0];
+                   var html = template('details',data);
+                   $('.main').html(html);
+               }
+
+           })
+
+
+           //比价购买
+           $.ajax({
+               url: 'http://127.0.0.1:3000/api/getproduct',
+               data: {productid:id_1},
+               success: function (data) {
+                   var html = template('buy',data);
+                   $('.table').html(html);
+
+               }
+
+           })
+
+
+           //评论板块
+
+           $.ajax({
+               url: 'http://127.0.0.1:3000/api/getproductcom',
+               data: {productid:id_1},
+               success: function (data) {
+                   var html = template('evaluate',data);
+                   $('.details').html(html);
+
+               }
+
+           })
+
+       })
+    </script>
+ </body>
+</html>

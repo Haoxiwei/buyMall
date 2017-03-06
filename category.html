@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <title>  分类页  </title>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="css/commen.css"/>
+    <link rel="stylesheet" href="css/categorypage.css"/>
+</head>
+<body>
+    <div class="home_layout">
+        <!--顶部通栏  start-->
+        <div class="top_banner" id="top">
+            <a href="index.html"></a>
+            <a href="#"></a>
+        </div>
+        <!--顶部通栏  end-->
+
+        <!--搜索框   start-->
+        <div class="search">
+            <input type="text" placeholder="请输入你需要比价的商品"/>
+            <input type="button" value="搜索"/>
+        </div>
+        <!--搜索框   end-->
+
+        <!--下拉菜单 start-->
+        <div class="menu"></div>
+        <!--下拉菜单 end-->
+
+        <!-- 底部  start-->
+        <div class="foot">
+            <ul class="clearfix">
+                <li><a href="#">登录</a></li>
+                <li><a href="#">注册</a></li>
+                <li><a href="#top">返回顶部</a></li>
+            </ul>
+            <p><span class="mobile">手机APP下载</span> 慢慢买手机版 -- 掌上比价平台</p>
+            <p>m.manmanbuy.com</p>
+        </div>
+        <!--底部 end-->
+    </div>
+
+<!--引包-->
+<script src="lib/jquery/jquery.js"></script>
+<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+<script src="js/template.js"></script>
+
+<!--商品分类大标签里面的所有小分类 li 元素的 模板 -->
+<script type="text/html" id="lis">
+    {{if result}}
+    {{each result as value}}
+                    <!-- 这里a 标签的链接 指向的是下一个当前类型商品的  商品详细信息的列表-->
+    <li class="s"><a href="./productList.html?{{value.categoryId}}"> {{value.category}}</a></li>
+    {{/each}}
+    {{/if}}
+</script>
+
+<!--利用bootstrap 制作的 下拉菜单的 模板-->
+<script type="text/html" id="four">
+    {{if result}}
+    {{each result as value i}}
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="heading{{i}}">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{i}}" aria-expanded="false" aria-controls="collapse{{i}}">
+                {{value.title}}
+            </a>
+        </div>
+        <div id="collapse{{i}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{i}}">
+            <ul class="panel-body clearfix" id="yes">
+            </ul>
+        </div>
+    </div>
+    {{/each}}
+    {{/if}}
+</script>
+
+<script>
+        //jQuery 入口函数
+        $(function () {
+            //通过jQuery的ajax 方法动态渲染页面
+            $.ajax({
+                url: 'http://127.0.0.1:3000/api/getcategorytitle',
+                success: function (data) {
+                    //首先先把页面上的所有外部的大标签渲染到页面上
+                    var html = template('four', data);
+                    $('.menu').html(html);
+                    //循环遍历上面动态创建出来的ul标签
+                    $('.panel>.panel-collapse>ul').each(function (i, v) {
+                        //然后发送ajax 请求，给每一个的ul标签动态的添加li元素，最后把所有的li元素输出到每一个ul 标签里面
+                        $.ajax({
+                            //这里的 +data.result[i].titleId, 是对url 地址进行拼接，因为每一个数据获取的路径都不一样，所以这里要动态的改变url地址
+                            //还可以通过data：{} 属性方法 进行设置
+                            url: 'http://127.0.0.1:3000/api/getcategory?titleid='+data.result[i].titleId,
+                            success: function (data) {
+                                var two = template('lis',data);
+                                v.innerHTML = two
+                            }
+                        })
+                    })
+                }
+            })
+        })
+
+    </script>
+</body>
+</html>

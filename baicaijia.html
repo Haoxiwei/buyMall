@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <title> 省钱控 详情页 </title>
+    <link rel="stylesheet" href="css/commen.css"/>
+    <link rel="stylesheet" href="css/baicaijia.css"/>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css"/>
+</head>
+<body>
+<div class="home-layout">
+
+
+    <div class="top">
+        <a href="index.html">  <img src="images/arrow2.png" alt=""/></a>
+        <h3>白菜价-淘宝内部券</h3>
+        <img src="images/header_app.png " alt=""/>
+    </div>
+
+    <div class="tab clearfix" >
+        <ul id="ul">
+            
+        </ul>
+    </div>
+
+
+    <!--对应商品列表-->
+    <div class="info"></div>
+
+
+
+
+
+    <!--底部 start-->
+    <div class="foot">
+
+        <ul class="clearfix">
+            <li><a href="#">登录</a></li>
+            <li><a href="#">注册</a></li>
+            <li><a href="#top">返回顶部</a></li>
+        </ul>
+
+        <p><span class="mobile">手机APP下载</span> 慢慢买手机版 -- 掌上比价平台</p>
+        <p>m.manmanbuy.com</p>
+    </div>
+    <!--底部 end-->
+</div>
+</body>
+</html>
+
+<script src="lib/jquery/jquery.js"></script>
+<script src="js/template.js"></script>
+<script src="lib/bootstrap/js/bootstrap.js"></script>
+<script src="js/common.js"></script>
+
+<script type="text/html" id="title">
+ {{if result }}
+    {{each result as value}}
+        <li><a href="#" id="{{value.titleId}}">{{value.title}}</a></li>
+    {{ /each }}
+ {{ /if }}
+</script>
+
+<script type="text/html" id="product">
+    {{if result}}
+        {{each result as value}}
+    <div class="detail clearfix">
+            <div class="img">{{#value.productImg}}</div>
+    <div class="text">
+            <div class="productName">{{#value.productName}}</div>
+    <div class="productPrice">{{#value.productPrice}}</div>
+    <div class="productCouponRemain">{{#value.productCouponRemain}}</div>
+    <div class="box">
+            <div class="productCoupon fl">{{#value.productCoupon}}</div>
+    <div class="productHref fr">{{#value.productHref}}</div>
+    </div>
+    </div>
+    </div>
+    {{/each}}
+    {{/if}}
+</script>
+
+
+
+<script>
+    $(function(){
+
+        $.ajax({
+            url:'http://127.0.0.1:3000/api/getbaicaijiatitle',
+            success:function(data) {
+                var html = template('title', data);
+                $('.tab>ul').html(html)
+
+
+                $.ajax({
+                    url: 'http://127.0.0.1:3000/api/getbaicaijiaproduct',
+                    data: {titleid:0},
+                    success: function (data) {
+                        var html = template('product', data);
+                        $('.info').html(html);
+                    }
+                })
+                var width = 0;
+
+                $('#ul>li').each(function (i, v) {
+                    width += ($(v).width() + 20)
+                })
+
+
+                $('.tab #ul').css('width', width)
+
+
+//                 滑动函数封装
+                function titleSwipe() {
+                    var maxX = 0;
+                    var minX = $('.tab').width() - $('.tab #ul').width();
+                    console.log(minX);
+
+                    var childBox = $('.tab #ul')[0];
+
+
+                    var maxSwipe = maxX + 100;
+                    var minSwipe = minX - 100;
+
+
+                    //让页面滑动起来
+                    var startX = 0;
+                    var distanceX = 0;
+                    var moveX = 0;
+                    var currX = 0;
+
+                    var setTranslateX = function (x) {
+                        childBox.style.transform = 'translateX(' + x + 'px)';
+                        childBox.style.webkitTransform = 'translateX(' + x + 'px)';
+                    }
+                    var addTransiton = function () {
+                        childBox.style.transition = "all .2s"
+                        childBox.style.webkitTransition = "all .2s"
+                    }
+
+                    window.addEventListener('touchstart', function (e) {
+                        startX = e.touches[0].clientX;
+                    })
+
+                    window.addEventListener('touchmove', function (e) {
+                        moveX = e.touches[0].clientX;
+                        distanceX = moveX - startX;
+                        if (distanceX + currX < maxSwipe && distanceX + currX > minSwipe) {
+                            addTransiton();
+                            setTranslateX(distanceX + currX);
+                        }
+                    })
+                    window.addEventListener('touchend', function (e) {
+                        if (distanceX + currX > maxX) {
+                            currX = maxX;
+                            setTranslateX(currX)
+                        }
+                        else if (distanceX + currX < minX) {
+                            currX = minX;
+                            setTranslateX(currX)
+                        }
+                        else {
+                            currX = distanceX + currX
+                        }
+
+                    })
+                    /*所有的li*/
+                    var lis = childBox.querySelectorAll('li');
+//                    console.log(lis)
+                    childBox.addEventListener('click', function (e) {
+//                        alert (1)
+                        /*找到事件触发源 然后找到点击的那个li元素*/
+                        //console.log(e.target.parentNode);
+                        var li = e.target.parentNode;
+                        for (var i = 0; i < lis.length; i++) {
+                            lis[i].className = " ";
+                            /*设置索引*/
+                            lis[i].index = i;
+                        }
+                        /*4.点击菜单的时候  改变当前的样式*/
+                        li.className = "now";
+                        var translateX = -li.index * 64;
+                        if (translateX > minX) {
+                            currX = translateX;
+                            addTransiton();
+                            setTranslateX(currX);
+                        } else {
+                            currX= minX;
+                            addTransiton();
+                            setTranslateX(currX)
+                        }
+
+
+                        var id =  $('#ul .now a').attr('id');
+                        $.ajax({
+                            url:'http://127.0.0.1:3000/api/getbaicaijiaproduct',
+                            data:{titleid:id},
+                            success:function(data){
+                                var html = template('product',data)
+                                $('.info').html(html)
+                            }
+                        })
+                    })
+                    }
+
+                titleSwipe();
+            }
+        })
+
+    })
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

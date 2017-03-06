@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>brand 第15页</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="css/commen.css">
+    <link rel="stylesheet" href="css/brand.css">
+</head>
+<body>
+<!--顶部通栏-->
+<div class="top_banner" id="top">
+    <a href="index.html"></a>
+    <a href="#"></a>
+</div>
+<!--顶部通栏  end-->
+
+<!--搜索框   start-->
+<div class="search">
+    <input type="text" placeholder="请输入你需要比价的商品"/>
+    <input type="button" value="搜索"/>
+</div>
+<!--搜索框   end-->
+<!--三级菜单栏-->
+<div class="nav clearfix">
+    <h3>
+        <a href='index.html'>首页</a>&nbsp;&gt;&nbsp;
+        <a href='brandTitle.html'>全部分类</a>&nbsp;&gt;&nbsp;
+    </h3>
+</div>
+<!--总标题1-->
+<div class="host">
+    <h3></h3>
+</div>
+<!--商品分类-->
+<ul class="category"></ul>
+<!--总标题2-->
+<div class="host">
+    <h3 class='rank'></h3>
+</div>
+<!--商品列表-->
+<div class="goodList clearfix"></div>
+<!--总标题3-->
+<div class="host">
+    <h3 class='discr'></h3>
+</div>
+    <a href='#' class="info_box b clearfix">
+
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--底部栏-->
+<!-- 底部  start-->
+<div class="foot">
+    <ul class="clearfix">
+        <li><a href="#">登录</a></li>
+        <li><a href="#">注册</a></li>
+        <li><a href="#top">返回顶部</a></li>
+    </ul>
+    <p><span class="mobile">手机APP下载</span> 慢慢买手机版 -- 掌上比价平台</p>
+    <p>m.manmanbuy.com</p>
+</div>
+<!--底部 end-->
+</body>
+<script src="lib/jquery/jquery.js"></script>
+<script src="lib/template.js"></script>
+
+
+
+<script type="text/html" id ="category">
+    {{each result as value i}}
+    <li>
+        <a href="#" class='clearfix'>
+            <span class='rank'>{{i + 1}}</span>
+            <h3>{{value.brandName}}</h3>
+            <p>{{value.brandInfo}}</p>
+            <i> > </i>
+        </a>
+    </li>
+    {{/each}}
+</script>
+<script type="text/html" id ="goodList">
+    {{each result as value}}
+    <a href='#' class="info_box">
+        <div class='mon_img'>
+            <i>{{#value.productImg}}</i>
+        </div>
+        <div class="mon_txt">
+            <p>{{value.productName}}</p>
+            <span class="price">{{value.productPrice}}</span><br>
+            <span class="comment">{{value.productQuote}}|{{value.productCom}}</span>
+            <img src="images/star.png" alt="">
+        </div>
+    </a>
+    {{/each}}
+</script>
+
+<script type="text/html" id="good-des">
+{{each result as value}}
+        <div class='mon_img fl'>
+            <i>{{#value.productImg}}</i>
+        </div>
+        <div class="mon_txt mt">
+            <p style="font-size:18px;">{{value.productName}}</p>
+        </div>
+{{ /each }}
+</script>
+<script>
+    $(function () {
+
+        var sel = location.search;
+        var seid = +sel.slice(1);
+
+        $.ajax({
+            type : 'get',
+            url : 'http://127.0.0.1:3000/api/getbrandtitle',
+            dataType : 'json',
+            success : function (result) {
+                var tit = result.result[seid].brandTitle;
+                tit = tit.replace('十大品牌','');
+                $('.host>h3').text(tit+'哪个牌子好');
+                $('.host>.rank').text(tit+'产品销量排行');
+                $('.host>.discr').text(tit+'最新评论');
+            }
+        })
+
+        $.ajax({
+            type : 'get',
+            url : 'http://127.0.0.1:3000/api/getbrand',
+            dataType : 'json',
+            data : {brandtitleid : seid},
+            success : function (result) {
+                var html = template( 'category', result );
+                $('.category').html( html );
+            }
+        })
+
+        $.ajax({
+            type : 'get',
+            url : 'http://127.0.0.1:3000/api/getbrandproductlist',
+            dataType : 'json',
+            data : {brandtitleid : seid , pagesize : 4},
+            success : function (result) {
+                var html = template( 'goodList', result );
+                $('.goodList').html( html );
+
+            }
+        })
+    })
+
+</script>
+</html>
+`
